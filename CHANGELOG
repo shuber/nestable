@@ -1,2 +1,3 @@
 2009-06-13 - Sean Huber (shuber@huberry.com)
   * Initial commit
+  * Add Nestable::Tree logic
