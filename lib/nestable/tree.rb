@@ -3,14 +3,14 @@ module Nestable
     
     def self.included(base)
       base.class_eval do
-        belongs_to :parent, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:foreign_key]
-        has_many :children, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:foreign_key], :order => nestable_options[:order], :dependent => :destroy
-        validate_on_update :ensure_foreign_key_does_not_reference_self_and_descendants
+        belongs_to :parent, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:parent_column]
+        has_many :children, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:parent_column], :dependent => nestable_options[:dependent], :order => nestable_options[:order]
+        validate_on_update :ensure_parent_column_does_not_reference_self_and_descendants
       end
     end
     
     def self.validate_nestable_options(options)
-      options = { :foreign_key => :parent_id, :scope => [] }.merge(options)
+      options = { :dependent => :destroy, :parent_column => :parent_id, :scope => [] }.merge(options)
       options[:class_name] ||= options[:class].name
       options[:order] = "#{table_name}.#{options[:order]}" if options[:order].is_a?(Symbol)
       options
@@ -39,7 +39,7 @@ module Nestable
     end
     
     def is_root?
-      !new_record? && send(self.class.nestable_options[:foreign_key]).nil?
+      !new_record? && send(self.class.nestable_options[:parent_column]).nil?
     end
     
     def leaves
@@ -56,7 +56,7 @@ module Nestable
     
     def roots
       conditions = nestable_scope
-      conditions.first << "#{self.class.table_name}.#{options[:foreign_key]} IS NULL"
+      conditions.first << "#{self.class.table_name}.#{self.class.nestable_options[:parent_column]} IS NULL"
       self.class.all :conditions => conditions, :order => self.class.nestable_options[:order]
     end
     
@@ -78,10 +78,10 @@ module Nestable
     
     protected
     
-      def ensure_foreign_key_does_not_reference_self_and_descendants
-        foreign_key = self.class.nestable_options[:foreign_key]
-        referenced_node_id = send(foreign_key)
-        self.errors.add(foreign_key, "can't be a reference to the current node or any of its descendants") if self_and_descendants.detect { |node| node.id == referenced_node_id }
+      def ensure_parent_column_does_not_reference_self_and_descendants
+        parent_column = self.class.nestable_options[:parent_column]
+        referenced_node_id = send(parent_column)
+        self.errors.add(parent_column, "can't be a reference to the current node or any of its descendants") if self_and_descendants.detect { |node| node.id == referenced_node_id }
       end
       
       def nestable_scope

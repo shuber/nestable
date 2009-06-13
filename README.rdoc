@@ -3,6 +3,14 @@
 Allows you to nest ActiveRecord items with various theories like tree, set, graph, etc.
 
 
+== What makes it different than other nesting gems/plugins?
+
+It aims to provide a standard interface to all nesting related methods no matter what theory you decide to use. 
+Some theories are better for read-heavy applications and others are better for write-heavy ones but you always want 
+the same information - ancestors, children, descendants, siblings, etc. Your application code shouldn't have to change 
+down the road just because you realized that you're better off storing records as a set instead of a tree.
+
+
 == Installation
 
   gem install shuber-nestable --source http://gems.github.com
@@ -10,9 +18,11 @@ Allows you to nest ActiveRecord items with various theories like tree, set, grap
   script/plugin install git://github.com/shuber/nestable.git
 
 
-== Examples
+== Usage
 
-Coming soon...
+  class Category < ActiveRecord::Base
+    nestable :theory => :set
+  end
 
 
 == Contact
