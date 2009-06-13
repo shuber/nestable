@@ -3,3 +3,4 @@
   * Add Nestable::Tree logic
   * Rename :foreign_key option to :parent_column
   * Update test_helper
+  * Add nestable tests
