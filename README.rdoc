@@ -1,0 +1,20 @@
+= nestable
+
+Allows you to nest ActiveRecord items with various theories like tree, set, graph, etc.
+
+
+== Installation
+
+  gem install shuber-nestable --source http://gems.github.com
+  OR
+  script/plugin install git://github.com/shuber/nestable.git
+
+
+== Examples
+
+Coming soon...
+
+
+== Contact
+
+Problems, comments, and suggestions all welcome: shuber@huberry.com
