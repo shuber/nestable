@@ -22,6 +22,11 @@ module Nestable
       nodes
     end
     
+    # Overwritten by
+    #   has_many :children
+    def children
+    end
+    
     def descendants
       children.inject([]) { |descendants, node| [node] + node.descendants }.flatten
     end
@@ -48,6 +53,11 @@ module Nestable
     
     def level
       ancestors.size
+    end
+    
+    # Overwritten by
+    #   belongs_to :parent
+    def parent
     end
     
     def root

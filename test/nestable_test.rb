@@ -5,9 +5,15 @@ module Nestable
     def self.process_options!(options)
       options
     end
+    
+    Nestable::METHODS.each { |m| define_method(m) {} }
   end
   
   module TheoryWithoutValidation
+    Nestable::METHODS.each { |m| define_method(m) {} }
+  end
+  
+  module TheoryWithoutMethod
   end
 end
 
@@ -35,11 +41,6 @@ class NestableTest < Test::Unit::TestCase
     assert ActiveRecord::Base.respond_to?(:nestable_options)
   end
   
-  def test_should_include_interface
-    ActiveRecord::Base.nestable
-    assert ActiveRecord::Base.include?(Nestable::Interface)
-  end
-  
   def test_should_include_theory
     assert !ActiveRecord::Base.include?(Nestable::TheoryWithValidation)
     ActiveRecord::Base.nestable :theory => 'theory_with_validation'
@@ -49,6 +50,12 @@ class NestableTest < Test::Unit::TestCase
   def test_should_add_the_class_to_nestable_options
     ActiveRecord::Base.nestable
     assert_equal ActiveRecord::Base, ActiveRecord::Base.nestable_options[:class]
+  end
+  
+  def test_should_raise_not_implemented_error_if_theory_is_missing_nestable_interface_methods
+    assert_raises NotImplementedError do
+      ActiveRecord::Base.nestable :theory => :theory_without_method
+    end
   end
   
 end
