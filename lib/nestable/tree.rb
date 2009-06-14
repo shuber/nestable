@@ -5,6 +5,7 @@ module Nestable
       base.class_eval do
         belongs_to :parent, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:parent_column]
         has_many :children, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:parent_column], :dependent => nestable_options[:dependent], :order => nestable_options[:order]
+        validate :ensure_parent_exists_in_nestable_scope
         validate_on_update :ensure_parent_column_does_not_reference_self_and_descendants
       end
     end
@@ -97,6 +98,12 @@ module Nestable
     
     protected
     
+      def ensure_parent_exists_in_nestable_scope
+        parent_column = self.class.nestable_options[:parent_column]
+        referenced_node_id = send(parent_column)
+        self.errors.add(parent_column, 'does not exist') unless referenced_node_id.nil? || self.class.find_by_id(referenced_node_id, :conditions => nestable_scope)
+      end
+      
       def ensure_parent_column_does_not_reference_self_and_descendants
         parent_column = self.class.nestable_options[:parent_column]
         referenced_node_id = send(parent_column)

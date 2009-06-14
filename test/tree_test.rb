@@ -121,6 +121,12 @@ class TreeTest < Test::Unit::TestCase
     assert_equal [@child_2], @child.siblings
   end
   
+  def test_ensure_parent_exists_in_nestable_scope
+    @child.parent_id = @root_3.id
+    assert !@child.valid?
+    assert @child.errors.on(:parent_id)
+  end
+  
   def test_ensure_parent_column_does_not_reference_self_and_descendants
     @root.parent_id = @root.id
     assert !@root.valid?
