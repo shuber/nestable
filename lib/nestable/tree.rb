@@ -9,7 +9,7 @@ module Nestable
       end
     end
     
-    def self.validate_nestable_options(options)
+    def self.process_options!(options)
       options = { :dependent => :destroy, :parent_column => :parent_id, :scope => [] }.merge(options)
       options[:class_name] ||= options[:class].name
       options[:order] = "#{table_name}.#{options[:order]}" if options[:order].is_a?(Symbol)

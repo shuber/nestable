@@ -2,7 +2,7 @@ require 'test_helper'
 
 module Nestable
   module TheoryWithValidation
-    def self.validate_nestable_options(options)
+    def self.process_options!(options)
       options
     end
   end
@@ -25,7 +25,7 @@ class NestableTest < Test::Unit::TestCase
     assert_raises(NameError) { ActiveRecord::Base.nestable :theory => 'invalid' }
   end
   
-  def test_should_raise_a_no_method_error_if_theory_does_not_have_a_validate_nestable_options_method
+  def test_should_raise_a_no_method_error_if_theory_does_not_have_a_process_options_method
     assert_raises(NoMethodError) { ActiveRecord::Base.nestable :theory => 'theory_without_validation' }
   end
   
