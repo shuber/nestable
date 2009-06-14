@@ -2,6 +2,7 @@
   * Update Nestable interface logic
   * Update README
   * Add tree tests
+  * Add basic set theory (uses all of the tree theory logic)
 
 2009-06-13 - Sean Huber (shuber@huberry.com)
   * Initial commit

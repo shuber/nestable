@@ -1,12 +1,16 @@
 module Nestable
   module Tree
     
-    def self.included(base)
+    def self.add_associations_to(base)
       base.class_eval do
         belongs_to :parent, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:parent_column]
         has_many :children, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:parent_column], :dependent => nestable_options[:dependent], :order => nestable_options[:order]
         validate_on_update :ensure_parent_column_does_not_reference_self_and_descendants
       end
+    end
+    
+    def self.included(base)
+      add_associations_to(base) if base.ancestors.include?(ActiveRecord::Base)
     end
     
     def self.process_options!(options)
