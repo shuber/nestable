@@ -6,11 +6,11 @@ module Nestable
       options
     end
     
-    Nestable::METHODS.each { |m| define_method(m) {} }
+    Nestable::Interface.instance_methods.each { |m| define_method(m) {} }
   end
   
   module TheoryWithoutValidation
-    Nestable::METHODS.each { |m| define_method(m) {} }
+    Nestable::Interface.instance_methods.each { |m| define_method(m) {} }
   end
   
   module TheoryWithoutMethod

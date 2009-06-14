@@ -6,6 +6,7 @@
   * Add methods that need to be overwritten to set
   * Tree ensures parent exists in the nestable scope
   * Refactor Tree included logic
+  * Refactor interface logic
 
 2009-06-13 - Sean Huber (shuber@huberry.com)
   * Initial commit

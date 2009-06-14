@@ -4,7 +4,7 @@ gem 'activerecord', '>= 2.0.0'
 require 'active_record'
 
 require File.dirname(__FILE__) + '/../lib/nestable'
-%w(tree set).each { |theory| require File.dirname(__FILE__) + '/../lib/nestable/' + theory }
+%w(interface tree set).each { |theory| require File.dirname(__FILE__) + '/../lib/nestable/' + theory }
 
 # ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database => ':memory:'
