@@ -5,3 +5,4 @@
   * Update test_helper
   * Add nestable tests
   * Rename validate_nestable_options to process_options!
+  * Add Nestable::Interface

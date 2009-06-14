@@ -35,6 +35,11 @@ class NestableTest < Test::Unit::TestCase
     assert ActiveRecord::Base.respond_to?(:nestable_options)
   end
   
+  def test_should_include_interface
+    ActiveRecord::Base.nestable
+    assert ActiveRecord::Base.include?(Nestable::Interface)
+  end
+  
   def test_should_include_theory
     assert !ActiveRecord::Base.include?(Nestable::TheoryWithValidation)
     ActiveRecord::Base.nestable :theory => 'theory_with_validation'

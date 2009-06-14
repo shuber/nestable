@@ -64,6 +64,10 @@ module Nestable
       [self] + ancestors
     end
     
+    def self_and_children
+      [self] + children
+    end
+    
     def self_and_descendants
       [self] + descendants
     end

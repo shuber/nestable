@@ -1,5 +1,7 @@
 = nestable
 
+INCOMPLETE - not ready for use
+
 Allows you to nest ActiveRecord items with various theories like tree, set, graph, etc.
 
 
