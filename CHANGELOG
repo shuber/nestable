@@ -7,3 +7,4 @@
   * Rename validate_nestable_options to process_options!
   * Add Nestable::Interface
   * Use NotImplementedError instead of defining our own
+  * Update README
