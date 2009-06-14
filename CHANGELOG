@@ -3,6 +3,7 @@
   * Update README
   * Add tree tests
   * Add basic set theory (uses all of the tree theory logic)
+  * Add methods that need to be overwritten to set
 
 2009-06-13 - Sean Huber (shuber@huberry.com)
   * Initial commit
