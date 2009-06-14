@@ -1,6 +1,7 @@
 2009-06-14 - Sean Huber (shuber@huberry.com)
   * Update Nestable interface logic
   * Update README
+  * Add tree tests
 
 2009-06-13 - Sean Huber (shuber@huberry.com)
   * Initial commit

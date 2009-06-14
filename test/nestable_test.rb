@@ -19,6 +19,10 @@ end
 
 class NestableTest < Test::Unit::TestCase
   
+  def setup
+    setup_tables
+  end
+  
   def test_should_add_a_nestable_method_to_active_record
     assert ActiveRecord::Base.respond_to?(:nestable)
   end

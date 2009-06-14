@@ -13,6 +13,7 @@ module Nestable
       options = { :dependent => :destroy, :parent_column => :parent_id, :scope => [] }.merge(options)
       options[:class_name] ||= options[:class].name
       options[:order] = "#{table_name}.#{options[:order]}" if options[:order].is_a?(Symbol)
+      options[:scope] = Array(options[:scope])
       options
     end
     
@@ -28,18 +29,18 @@ module Nestable
     end
     
     def descendants
-      children.inject([]) { |descendants, node| [node] + node.descendants }.flatten
+      children.inject([]) { |descendants, node| descendants += [node] + node.descendants }.flatten
     end
     
-    def is_ancestor_of(node)
+    def is_ancestor_of?(node)
       node.ancestors.include?(self)
     end
     
-    def is_descendant_of(node)
-      node.is_ancestor_of(self)
+    def is_descendant_of?(node)
+      node.is_ancestor_of?(self)
     end
     
-    def is_sibling_of(node)
+    def is_sibling_of?(node)
       node.siblings.include?(self)
     end
     
@@ -61,12 +62,12 @@ module Nestable
     end
     
     def root
-      ancestors.last
+      is_root? ? self : ancestors.last
     end
     
     def roots
       conditions = nestable_scope
-      conditions.first << "#{self.class.table_name}.#{self.class.nestable_options[:parent_column]} IS NULL"
+      conditions.first << " AND #{self.class.table_name}.#{self.class.nestable_options[:parent_column]} IS NULL"
       self.class.all :conditions => conditions, :order => self.class.nestable_options[:order]
     end
     
@@ -108,6 +109,7 @@ module Nestable
             conditions.first << '= ?'
             conditions << value
           end
+          conditions
         end
       end
     

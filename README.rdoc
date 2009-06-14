@@ -27,7 +27,7 @@ just because you realized that you're better off storing records as a set instea
 
 == Supported Theories
 
-* tree
+* tree (default)
 
 
 == Contact

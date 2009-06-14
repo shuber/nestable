@@ -6,9 +6,11 @@ require 'active_record'
 require File.dirname(__FILE__) + '/../lib/nestable'
 Dir[File.dirname(__FILE__) + '/../lib/nestable/*.rb'].each { |theory| require theory }
 
+# ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database => ':memory:'
 
-def create_tables
+def setup_tables
+  ActiveRecord::Base.connection.tables.each { |table| ActiveRecord::Base.connection.drop_table(table) }
   silence_stream(STDOUT) do
     ActiveRecord::Schema.define(:version => 1) do
       create_table :categories do |t|
@@ -26,12 +28,5 @@ def create_tables
   end
 end
 
-# The table needs to exist before defining the class
-create_tables
-
-Test::Unit::TestCase.class_eval do
-  def setup
-    ActiveRecord::Base.connection.tables.each { |table| ActiveRecord::Base.connection.drop_table(table) }
-    create_tables
-  end
-end
+# The tables need to exist before defining the models
+setup_tables

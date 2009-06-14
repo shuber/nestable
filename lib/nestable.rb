@@ -1,6 +1,6 @@
 module Nestable
   
-  METHODS = %w(ancestors children descendants is_ancestor_of is_descendant_of is_sibling_of is_root? leaves level parent root roots self_and_ancestors self_and_children self_and_descendants self_and_siblings siblings)
+  METHODS = %w(ancestors children descendants is_ancestor_of? is_descendant_of? is_sibling_of? is_root? leaves level parent root roots self_and_ancestors self_and_children self_and_descendants self_and_siblings siblings)
   
   def nestable(options = {})
     theory = "Nestable::#{(options[:theory] ||= :tree).to_s.classify}".constantize
