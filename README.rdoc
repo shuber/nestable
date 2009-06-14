@@ -1,4 +1,4 @@
-= nestable - INCOMPLETE
+= nestable
 
 Allows you to nest ActiveRecord records with various theories like tree, set, etc.
 
@@ -21,7 +21,7 @@ just because you realized that you're better off storing records as a set instea
 == Usage
 
   class Category < ActiveRecord::Base
-    nestable :theory => :set
+    nestable :parent_column => :parent_id, :scope => :site_id
   end
 
 
@@ -29,7 +29,6 @@ just because you realized that you're better off storing records as a set instea
 
 
 * tree (default)
-* set
 
 
 == Contact
