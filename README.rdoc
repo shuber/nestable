@@ -1,16 +1,13 @@
-= nestable
-
-INCOMPLETE - not ready for use
+= nestable - INCOMPLETE - not ready for use
 
 Allows you to nest ActiveRecord records with various theories like tree, set, etc.
-
 
 === What makes it different than other nesting gems/plugins?
 
 It aims to provide a standard interface to all nesting related methods no matter what theory you decide to use. 
 Some theories are better for read-heavy applications and others are better for write-heavy ones but you always want 
 the same information - ancestors, children, descendants, siblings, etc. Your application code shouldn't have to change 
-down the road just because you realized that you're better off storing records as a set instead of a tree.
+just because you realized that you're better off storing records as a set instead of a tree.
 
 
 == Installation
