@@ -1,7 +1,5 @@
 module Nestable
   
-  class MethodNotImplementedError < StandardError; end
-  
   def nestable(options = {})
     cattr_accessor :nestable_options
     theory = "Nestable::#{(options[:theory] ||= :tree).to_s.classify}".constantize
@@ -30,7 +28,7 @@ module Nestable
       siblings
     ).each do |method|
       define_method method do |*args|
-        raise MethodNotImplementedError.new("#{method} must be implemented by the Nestable::#{self.class.nestable_options[:theory].to_s.classify} module")
+        raise NotImplementedError.new("#{method} must be implemented by the Nestable::#{self.class.nestable_options[:theory].to_s.classify} module")
       end
     end
   end
