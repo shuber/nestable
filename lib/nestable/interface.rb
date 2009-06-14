@@ -4,10 +4,19 @@ module Nestable
     def ancestors
     end
     
+    def ancestor_ids
+    end
+    
     def children
     end
     
+    def children_ids
+    end
+    
     def descendants
+    end
+    
+    def descendant_ids
     end
     
     def is_ancestor_of?(node)
@@ -25,6 +34,9 @@ module Nestable
     def leaves
     end
     
+    def leave_ids
+    end
+    
     def level
     end
     
@@ -37,19 +49,37 @@ module Nestable
     def roots
     end
     
+    def root_ids
+    end
+    
     def self_and_ancestors
+    end
+    
+    def self_and_ancestor_ids
     end
     
     def self_and_children
     end
     
+    def self_and_children_ids
+    end
+    
     def self_and_descendants
+    end
+    
+    def self_and_descendant_ids
     end
     
     def self_and_siblings
     end
     
+    def self_and_sibling_ids
+    end
+    
     def siblings
+    end
+    
+    def sibling_ids
     end
     
   end

@@ -24,13 +24,25 @@ module Nestable
       nodes
     end
     
+    def ancestor_ids
+      ancestors.map(&:id)
+    end
+    
     # Overwritten by
     #   has_many :children
     def children
     end
     
+    def children_ids
+      children.map(&:id)
+    end
+    
     def descendants
       children.inject([]) { |descendants, node| descendants += [node] + node.descendants }.flatten
+    end
+    
+    def descendant_ids
+      descendants.map(&:id)
     end
     
     def is_ancestor_of?(node)
@@ -53,6 +65,10 @@ module Nestable
       children.map { |child| child.children.empty? ? [child] : child.leaves }.flatten
     end
     
+    def leave_ids
+      leaves.map(&:id)
+    end
+    
     def level
       ancestors.size
     end
@@ -72,24 +88,48 @@ module Nestable
       self.class.all :conditions => conditions, :order => self.class.nestable_options[:order]
     end
     
+    def root_ids
+      roots.map(&:id)
+    end
+    
     def self_and_ancestors
       [self] + ancestors
+    end
+    
+    def self_and_ancestor_ids
+      self_and_ancestors.map(&:id)
     end
     
     def self_and_children
       [self] + children
     end
     
+    def self_and_children_ids
+      self_and_children.map(&:id)
+    end
+    
     def self_and_descendants
       [self] + descendants
+    end
+    
+    def self_and_descendant_ids
+      self_and_descendants.map(&:id)
     end
     
     def self_and_siblings
       [self] + siblings
     end
     
+    def self_and_sibling_ids
+      self_and_siblings.map(&:id)
+    end
+    
     def siblings
       (is_root? ? roots : parent.children) - [self]
+    end
+    
+    def sibling_ids
+      siblings.map(&:id)
     end
     
     protected
@@ -102,8 +142,7 @@ module Nestable
       
       def ensure_parent_column_does_not_reference_self_and_descendants
         parent_column = self.class.nestable_options[:parent_column]
-        referenced_node_id = send(parent_column)
-        self.errors.add(parent_column, "can't be a reference to the current node or any of its descendants") if self_and_descendants.detect { |node| node.id == referenced_node_id }
+        self.errors.add(parent_column, "can't be a reference to the current node or any of its descendants") if self_and_descendant_ids.include?(send(parent_column))
       end
       
       def nestable_scope
