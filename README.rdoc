@@ -2,7 +2,7 @@
 
 INCOMPLETE - not ready for use
 
-Allows you to nest ActiveRecord items with various theories like tree, set, graph, etc.
+Allows you to nest ActiveRecord records with various theories like tree, set, etc.
 
 
 == What makes it different than other nesting gems/plugins?
