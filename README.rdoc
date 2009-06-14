@@ -2,7 +2,6 @@
 
 Allows you to nest ActiveRecord records with various theories like tree, set, etc.
 
-
 What makes it different than other nesting gems/plugins?
 
 It aims to provide a standard interface to all nesting related methods no matter what theory you decide to use. 
@@ -20,15 +19,36 @@ just because you realized that you're better off storing records as a set instea
 
 == Usage
 
+Simply call +nestable+ in your model and pass the :+theory+ that you want to use along with any options related to it (see Theories below).
+
   class Category < ActiveRecord::Base
-    nestable :parent_column => :parent_id, :scope => :site_id
+    nestable :theory => :tree, :scope => :site_id
   end
 
 
-== Supported Theories
+== Theories
+
+=== :tree (default)
+
+Pros: 
+
+* Simple and elegant - only requires a foreign key which references a node's parent.
+* Quick writes
 
 
-* tree (default)
+Cons: 
+
+
+* Can be slow and inefficient for fetching large trees due to recursion - one query is required for each level in a tree.
+
+Options:
+
+
+* :class_name - The class name to use for the parent and children associations. Defaults to the name of the current class.
+* :dependent - The dependent option for the children association. Defaults to :destroy.
+* :order - The default order to use when collecting children, descendants, siblings, etc. Defaults to nil.
+* :parent_column - The name of the foreign key that references a node's parent. Defaults to :parent_id.
+* :scope - A field or an array of fields to scope trees to. Defaults to an empty array.
 
 
 == Contact
