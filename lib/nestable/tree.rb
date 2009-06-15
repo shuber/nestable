@@ -87,30 +87,25 @@ module Nestable
       ancestors.size
     end
     
-    # Returns an array of conditions which can be used with <tt>ActiveRecord::Base.find</tt> to lookup nodes in the same scope as the current node.
+    # Returns an anonymous scope of <tt>:conditions</tt> and <tt>:order</tt> referencing the same <tt>:scope</tt> as the current node
+    #
+    # Accepts an optional hash of extra conditions
     #
     # Example:
     #
     #   class Category < ActiveRecord::Base
-    #     nestable :scope => :site_id
+    #     nestable :scope => :site_id, :order => :name
     #   end
     #
     #   @category = Category.find(13)
     #
-    #   # Returns categories with the same :site_id as @category
-    #   Category.find(:all, :conditions => @category.nestable_scope)
-    def nestable_scope
-      self.class.nestable_options[:scope].inject(["1 = 1"]) do |conditions, scope|
-        conditions.first << " AND #{self.class.table_name}.#{scope} "
-        value = send(scope)
-        if value.nil?
-          conditions.first << 'IS NULL'
-        else
-          conditions.first << '= ?'
-          conditions << value
-        end
-        conditions
-      end
+    #   # Returns categories with the same :site_id as @category ordered by name
+    #   @category.nestable_scope.all
+    def nestable_scope(conditions = {})
+      self.class.base_class.scoped(
+        :conditions => self.class.nestable_options[:scope].inject({}) { |scope, field| scope.merge!(field => send(field)) }.merge(conditions),
+        :order => self.class.nestable_options[:order]
+      )
     end
     
     def parent # :nodoc:
@@ -125,9 +120,7 @@ module Nestable
     end
     
     def roots # :nodoc:
-      conditions = nestable_scope
-      conditions.first << " AND #{self.class.table_name}.#{self.class.nestable_options[:parent_column]} IS NULL"
-      self.class.all :conditions => conditions, :order => self.class.nestable_options[:order]
+      nestable_scope(self.class.nestable_options[:parent_column] => nil)
     end
     
     def self_and_ancestor_ids # :nodoc:
@@ -175,7 +168,7 @@ module Nestable
       def ensure_parent_exists_in_nestable_scope # :nodoc:
         parent_column = self.class.nestable_options[:parent_column]
         referenced_node_id = send(parent_column)
-        self.errors.add(parent_column, 'does not exist') unless referenced_node_id.nil? || self.class.find_by_id(referenced_node_id, :conditions => nestable_scope)
+        self.errors.add(parent_column, 'does not exist') unless referenced_node_id.nil? || nestable_scope(:id => referenced_node_id).first
       end
       
       def ensure_parent_column_does_not_reference_self_and_descendants # :nodoc:

@@ -10,6 +10,7 @@
   * Add #{association}_ids methods
   * Update documentation
   * Update set tests
+  * Tree#nestable_scope uses an anonymous scope instead of an array of conditions
 
 2009-06-13 - Sean Huber (shuber@huberry.com)
   * Initial commit

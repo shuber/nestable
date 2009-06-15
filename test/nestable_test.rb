@@ -35,10 +35,6 @@ class NestableTest < Test::Unit::TestCase
     assert_raises(NameError) { ActiveRecord::Base.nestable :theory => 'invalid' }
   end
   
-  def test_should_raise_a_no_method_error_if_theory_does_not_have_a_process_options_method
-    assert_raises(NoMethodError) { ActiveRecord::Base.nestable :theory => 'theory_without_validation' }
-  end
-  
   def test_should_add_a_cattr_accessor_for_nestable_options
     assert !ActiveRecord::Base.respond_to?(:nestable_options)
     ActiveRecord::Base.nestable
