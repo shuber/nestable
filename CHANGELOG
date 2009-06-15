@@ -9,6 +9,7 @@
   * Refactor interface logic
   * Add #{association}_ids methods
   * Update documentation
+  * Update set tests
 
 2009-06-13 - Sean Huber (shuber@huberry.com)
   * Initial commit
