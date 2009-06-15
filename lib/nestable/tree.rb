@@ -29,7 +29,7 @@ module Nestable
     def self.process_options!(options) # :nodoc:
       options = { :dependent => :destroy, :parent_column => :parent_id, :scope => [] }.merge(options)
       options[:class_name] ||= options[:class].name
-      options[:order] = "#{table_name}.#{options[:order]}" if options[:order].is_a?(Symbol)
+      options[:order] = Array(options[:order]).map { |order| order.is_a?(Symbol) ? "#{self.class.table_name}.#{order}" : order }.join(', ') unless options[:order].nil?
       options[:scope] = Array(options[:scope])
       options
     end
