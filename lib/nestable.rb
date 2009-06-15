@@ -1,5 +1,4 @@
 module Nestable
-  
   # Adds nesting support to the current class.
   #
   # Accepts an optional argument <tt>:theory</tt> along with any other options related with that theory.
@@ -20,7 +19,6 @@ module Nestable
     self.nestable_options = theory.respond_to?(:process_options!) ? theory.process_options!({ :class => self }.merge(options)) : options
     include theory
   end
-  
 end
 
 ActiveRecord::Base.extend Nestable

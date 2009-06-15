@@ -28,11 +28,11 @@ Simply call <tt>nestable</tt> in your model and pass the <tt>:theory</tt> that y
 
 == Theories
 
-Take a look at the documentation[http://rdoc.info/projects/shuber/nestable] for more information about each theory
+Take a look at the documentation at http://rdoc.info/projects/shuber/nestable for more information about each theory
 
 * :tree (Nestable::Tree) <b>default</b>
 
 
 == Contact
 
-Problems, comments, and suggestions all welcome: shuber@huberry.com[mailto:shuber@huberry.com]
+Problems, comments, and suggestions all welcome: shuber@huberry.com

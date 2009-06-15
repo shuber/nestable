@@ -20,7 +20,7 @@ module Nestable
   #   :scope          -  A field or an array of fields to scope trees to. Defaults to an empty array.
   module Tree
     
-    def self.included(base) #:nodoc:
+    def self.included(base) # :nodoc:
       base.class_eval do
         belongs_to :parent, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:parent_column]
         has_many :children, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:parent_column], :dependent => nestable_options[:dependent], :order => nestable_options[:order]
@@ -29,7 +29,7 @@ module Nestable
       end if base.ancestors.include?(ActiveRecord::Base)
     end
     
-    def self.process_options!(options) #:nodoc:
+    def self.process_options!(options) # :nodoc:
       options = { :dependent => :destroy, :parent_column => :parent_id, :scope => [] }.merge(options)
       options[:class_name] ||= options[:class].name
       options[:order] = "#{table_name}.#{options[:order]}" if options[:order].is_a?(Symbol)
@@ -37,61 +37,60 @@ module Nestable
       options
     end
     
-    def ancestor_ids #:nodoc:
+    def ancestor_ids # :nodoc:
       ancestors.map(&:id)
     end
     
-    def ancestors #:nodoc:
+    def ancestors # :nodoc:
       node, nodes = self, []
       nodes << node = node.parent while node.parent
       nodes
     end
     
-    def children #:nodoc:
+    def children # :nodoc:
     end
     
-    def children_ids #:nodoc:
+    def children_ids # :nodoc:
       children.map(&:id)
     end
     
-    def descendant_ids #:nodoc:
+    def descendant_ids # :nodoc:
       descendants.map(&:id)
     end
     
-    def descendants #:nodoc:
+    def descendants # :nodoc:
       children.inject([]) { |descendants, node| descendants += [node] + node.descendants }.flatten
     end
     
-    def is_ancestor_of?(node) #:nodoc:
+    def is_ancestor_of?(node) # :nodoc:
       node.ancestors.include?(self)
     end
     
-    def is_descendant_of?(node) #:nodoc:
+    def is_descendant_of?(node) # :nodoc:
       node.is_ancestor_of?(self)
     end
     
-    def is_sibling_of?(node) #:nodoc:
+    def is_sibling_of?(node) # :nodoc:
       node.siblings.include?(self)
     end
     
-    def is_root? #:nodoc:
+    def is_root? # :nodoc:
       !new_record? && send(self.class.nestable_options[:parent_column]).nil?
     end
     
-    def leave_ids #:nodoc:
+    def leave_ids # :nodoc:
       leaves.map(&:id)
     end
     
-    def leaves #:nodoc:
+    def leaves # :nodoc:
       children.map { |child| child.children.empty? ? [child] : child.leaves }.flatten
     end
     
-    def level #:nodoc:
+    def level # :nodoc:
       ancestors.size
     end
     
-    # Returns an array of conditions which can be used with <tt>ActiveRecord::Base.find</tt> 
-    # to lookup nodes in the same scope as the current node.
+    # Returns an array of conditions which can be used with <tt>ActiveRecord::Base.find</tt> to lookup nodes in the same scope as the current node.
     #
     # Example:
     #
@@ -117,72 +116,72 @@ module Nestable
       end
     end
     
-    def parent #:nodoc:
+    def parent # :nodoc:
     end
     
-    def root #:nodoc:
+    def root # :nodoc:
       is_root? ? self : ancestors.last
     end
     
-    def root_ids #:nodoc:
+    def root_ids # :nodoc:
       roots.map(&:id)
     end
     
-    def roots #:nodoc:
+    def roots # :nodoc:
       conditions = nestable_scope
       conditions.first << " AND #{self.class.table_name}.#{self.class.nestable_options[:parent_column]} IS NULL"
       self.class.all :conditions => conditions, :order => self.class.nestable_options[:order]
     end
     
-    def self_and_ancestor_ids #:nodoc:
+    def self_and_ancestor_ids # :nodoc:
       self_and_ancestors.map(&:id)
     end
     
-    def self_and_ancestors #:nodoc:
+    def self_and_ancestors # :nodoc:
       [self] + ancestors
     end
     
-    def self_and_children #:nodoc:
+    def self_and_children # :nodoc:
       [self] + children
     end
     
-    def self_and_children_ids #:nodoc:
+    def self_and_children_ids # :nodoc:
       self_and_children.map(&:id)
     end
     
-    def self_and_descendant_ids #:nodoc:
+    def self_and_descendant_ids # :nodoc:
       self_and_descendants.map(&:id)
     end
     
-    def self_and_descendants #:nodoc:
+    def self_and_descendants # :nodoc:
       [self] + descendants
     end
     
-    def self_and_sibling_ids #:nodoc:
+    def self_and_sibling_ids # :nodoc:
       self_and_siblings.map(&:id)
     end
     
-    def self_and_siblings #:nodoc:
+    def self_and_siblings # :nodoc:
       [self] + siblings
     end
     
-    def sibling_ids #:nodoc:
+    def sibling_ids # :nodoc:
       siblings.map(&:id)
     end
     
-    def siblings #:nodoc:
+    def siblings # :nodoc:
       (is_root? ? roots : parent.children) - [self]
     end
     
     protected
     
-      def ensure_parent_exists_in_nestable_scope #:nodoc:
+      def ensure_parent_exists_in_nestable_scope # :nodoc:
         parent_column = self.class.nestable_options[:parent_column]
         referenced_node_id = send(parent_column)
         self.errors.add(parent_column, 'does not exist') unless referenced_node_id.nil? || self.class.find_by_id(referenced_node_id, :conditions => nestable_scope)
       end
       
-      def ensure_parent_column_does_not_reference_self_and_descendants #:nodoc:
+      def ensure_parent_column_does_not_reference_self_and_descendants # :nodoc:
         parent_column = self.class.nestable_options[:parent_column]
         self.errors.add(parent_column, "can't be a reference to the current node or any of its descendants") if self_and_descendant_ids.include?(send(parent_column))
       end
