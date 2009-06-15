@@ -2,6 +2,7 @@
   * Tree accepts an array of order options
   * Add Tree#parent_column_value
   * Refactor Tree#nestable_scope
+  * Tree uses anonymous scopes whenever possible
 
 2009-06-14 - Sean Huber (shuber@huberry.com)
   * Update Nestable interface logic

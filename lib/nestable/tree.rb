@@ -156,7 +156,7 @@ module Nestable
     end
     
     def self_and_siblings # :nodoc:
-      [self] + siblings
+      nestable_scope.scoped(:conditions => { self.class.nestable_options[:parent_column] => parent_column_value })
     end
     
     def sibling_ids # :nodoc:
@@ -164,7 +164,7 @@ module Nestable
     end
     
     def siblings # :nodoc:
-      (is_root? ? roots : parent.children) - [self]
+      self_and_siblings.scoped(:conditions => ["#{self.class.table_name}.#{self.class.primary_key} <> ?", id])
     end
     
     protected
