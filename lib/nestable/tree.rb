@@ -1,18 +1,15 @@
 module Nestable
   # Pros: 
-  # 
+  #
   # * Simple and elegant - only requires a foreign key which references a node's parent.
   # * Quick writes
-  # 
-  # 
+  #
   # Cons: 
-  # 
-  # 
+  #
   # * Can be slow and inefficient for fetching large trees due to recursion - one query is required for each level in a tree.
-  # 
+  #
   # Options:
-  # 
-  # 
+  #
   #   :class_name     -  The class name to use for the parent and children associations. Defaults to the name of the current class.
   #   :dependent      -  The dependent option for the children association. Defaults to :destroy.
   #   :order          -  The default order to use when collecting children, descendants, siblings, etc. Defaults to nil.
