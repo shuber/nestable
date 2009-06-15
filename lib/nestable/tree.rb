@@ -72,7 +72,7 @@ module Nestable
     end
     
     def is_root? # :nodoc:
-      !new_record? && send(self.class.nestable_options[:parent_column]).nil?
+      !new_record? && parent_column_value.nil?
     end
     
     def leave_ids # :nodoc:
@@ -110,6 +110,11 @@ module Nestable
     end
     
     def parent # :nodoc:
+    end
+    
+    # Returns the value of a node's <tt>:parent_column</tt>
+    def parent_column_value
+      send(self.class.nestable_options[:parent_column])
     end
     
     def root # :nodoc:
@@ -167,14 +172,11 @@ module Nestable
     protected
     
       def ensure_parent_exists_in_nestable_scope # :nodoc:
-        parent_column = self.class.nestable_options[:parent_column]
-        referenced_node_id = send(parent_column)
-        self.errors.add(parent_column, 'does not exist') unless referenced_node_id.nil? || nestable_scope(:id => referenced_node_id).first
+        self.errors.add(self.class.nestable_options[:parent_column], 'does not exist') unless parent_column_value.nil? || nestable_scope(:id => parent_column_value).first
       end
       
       def ensure_parent_column_does_not_reference_self_and_descendants # :nodoc:
-        parent_column = self.class.nestable_options[:parent_column]
-        self.errors.add(parent_column, "can't be a reference to the current node or any of its descendants") if self_and_descendant_ids.include?(send(parent_column))
+        self.errors.add(self.class.nestable_options[:parent_column], "can't be a reference to the current node or any of its descendants") if self_and_descendant_ids.include?(parent_column_value)
       end
     
   end

@@ -1,5 +1,6 @@
 2009-06-15 - Sean Huber (shuber@huberry.com)
   * Tree accepts an array of order options
+  * Add Tree#parent_column_value
 
 2009-06-14 - Sean Huber (shuber@huberry.com)
   * Update Nestable interface logic

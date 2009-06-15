@@ -103,6 +103,12 @@ class TreeTest < Test::Unit::TestCase
     assert_equal @child, @sub_child.parent
   end
   
+  def test_parent_column_value
+    assert_nil @root.parent_column_value
+    assert_equal @root.id, @child.parent_column_value
+    assert_equal @child.id, @sub_child.parent_column_value
+  end
+  
   def test_root
     assert_equal @root, @root.root
     assert_equal @root, @child.root
