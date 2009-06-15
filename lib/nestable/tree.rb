@@ -89,8 +89,6 @@ module Nestable
     
     # Returns an anonymous scope of <tt>:conditions</tt> and <tt>:order</tt> referencing the same <tt>:scope</tt> as the current node
     #
-    # Accepts an optional hash of extra conditions
-    #
     # Example:
     #
     #   class Category < ActiveRecord::Base
@@ -101,8 +99,8 @@ module Nestable
     #
     #   # Returns categories with the same :site_id as @category ordered by name
     #   @category.nestable_scope.all
-    def nestable_scope(conditions = {})
-      scope = self.class.nestable_options[:scope].inject({}) { |scope, field| scope.merge!(field => send(field)) }.merge(conditions)
+    def nestable_scope
+      scope = self.class.nestable_options[:scope].inject({}) { |scope, field| scope.merge!(field => send(field)) }
       self.class.base_class.scoped(
         :conditions => scope.empty? ? nil : scope,
         :order => self.class.nestable_options[:order]
@@ -126,7 +124,7 @@ module Nestable
     end
     
     def roots # :nodoc:
-      nestable_scope(self.class.nestable_options[:parent_column] => nil)
+      nestable_scope.scoped(:conditions => { self.class.nestable_options[:parent_column] => nil })
     end
     
     def self_and_ancestor_ids # :nodoc:
@@ -172,7 +170,7 @@ module Nestable
     protected
     
       def ensure_parent_exists_in_nestable_scope # :nodoc:
-        self.errors.add(self.class.nestable_options[:parent_column], 'does not exist') unless parent_column_value.nil? || nestable_scope(:id => parent_column_value).first
+        self.errors.add(self.class.nestable_options[:parent_column], 'does not exist') unless parent_column_value.nil? || nestable_scope.scoped(:conditions => { :id => parent_column_value }).first
       end
       
       def ensure_parent_column_does_not_reference_self_and_descendants # :nodoc:
