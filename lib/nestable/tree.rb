@@ -102,8 +102,9 @@ module Nestable
     #   # Returns categories with the same :site_id as @category ordered by name
     #   @category.nestable_scope.all
     def nestable_scope(conditions = {})
+      scope = self.class.nestable_options[:scope].inject({}) { |scope, field| scope.merge!(field => send(field)) }.merge(conditions)
       self.class.base_class.scoped(
-        :conditions => self.class.nestable_options[:scope].inject({}) { |scope, field| scope.merge!(field => send(field)) }.merge(conditions),
+        :conditions => scope.empty? ? nil : scope,
         :order => self.class.nestable_options[:order]
       )
     end
