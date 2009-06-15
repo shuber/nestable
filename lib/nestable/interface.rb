@@ -1,10 +1,12 @@
 module Nestable
+  # The standard interface for all nestable theories. Every nestable ActiveRecord 
+  # instance will respond to these methods reguardless of which theory was used.
   module Interface
     
-    def ancestors
+    def ancestor_ids
     end
     
-    def ancestor_ids
+    def ancestors
     end
     
     def children
@@ -13,10 +15,10 @@ module Nestable
     def children_ids
     end
     
-    def descendants
+    def descendant_ids
     end
     
-    def descendant_ids
+    def descendants
     end
     
     def is_ancestor_of?(node)
@@ -31,10 +33,10 @@ module Nestable
     def is_root?
     end
     
-    def leaves
+    def leave_ids
     end
     
-    def leave_ids
+    def leaves
     end
     
     def level
@@ -46,16 +48,16 @@ module Nestable
     def root
     end
     
-    def roots
-    end
-    
     def root_ids
     end
     
-    def self_and_ancestors
+    def roots
     end
     
     def self_and_ancestor_ids
+    end
+    
+    def self_and_ancestors
     end
     
     def self_and_children
@@ -64,22 +66,22 @@ module Nestable
     def self_and_children_ids
     end
     
-    def self_and_descendants
-    end
-    
     def self_and_descendant_ids
     end
     
-    def self_and_siblings
+    def self_and_descendants
     end
     
     def self_and_sibling_ids
     end
     
-    def siblings
+    def self_and_siblings
     end
     
     def sibling_ids
+    end
+    
+    def siblings
     end
     
   end

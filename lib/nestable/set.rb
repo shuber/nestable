@@ -3,27 +3,27 @@ module Nestable
     
     include Nestable::Tree
     
-    def self.included(base)
+    def self.included(base) #:nodoc:
       Nestable::Tree.included(base)
     end
     
-    def self.process_options!(options)
+    def self.process_options!(options) #:nodoc:
       { :left_column => :lft, :right_column => :rgt }.merge(Nestable::Tree.process_options!(options))
     end
     
-    def ancestors
+    def ancestors #:nodoc:
     end
     
-    def descendants
+    def descendants #:nodoc:
     end
     
-    def leaves
+    def leaves #:nodoc:
     end
     
-    def root
+    def root #:nodoc:
     end
     
-    def siblings
+    def siblings #:nodoc:
     end
     
   end
