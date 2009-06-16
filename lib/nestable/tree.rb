@@ -1,12 +1,11 @@
 module Nestable
   # Pros: 
   #
-  # * Simple and elegant - only requires a foreign key which references a node's parent.
-  # * Quick writes
+  # * Quick inserts and updates - it only needs to set a foreign key on the current node which references its parent node
   #
   # Cons: 
   #
-  # * Can be slow and inefficient for fetching large trees due to recursion - one query is required for each level in a tree.
+  # * Slow reads - it's inefficient for fetching large trees since one query is required for each level in a tree
   #
   # Options:
   #
@@ -182,13 +181,13 @@ module Nestable
     
       def ensure_parent_exists_in_nestable_scope # :nodoc:
         unless !parent_column_value_changed? || parent_column_value.nil? || nestable_scope.scoped(:conditions => { :id => parent_column_value }).first
-          self.errors.add(self.class.nestable_options[:parent_column], 'does not exist')
+          errors.add(self.class.nestable_options[:parent_column], 'does not exist')
         end
       end
       
       def ensure_parent_column_does_not_reference_self_and_descendants # :nodoc:
         if parent_column_value_changed? &&  self_and_descendant_ids.include?(parent_column_value)
-          self.errors.add(self.class.nestable_options[:parent_column], "can't be a reference to the current node or any of its descendants")
+          errors.add(self.class.nestable_options[:parent_column], "can't be a reference to the current node or any of its descendants")
         end
       end
     

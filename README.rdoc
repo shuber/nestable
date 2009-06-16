@@ -1,6 +1,6 @@
 = nestable
 
-Allows you to nest ActiveRecord records with various theories like tree, set, etc.
+Allows you to nest ActiveRecord records with various theories like tree, set, path, etc.
 
 What makes it different than other nesting gems/plugins?
 
@@ -8,6 +8,9 @@ It aims to provide a standard interface to all nesting related methods no matter
 Some theories are better for read-heavy applications and others are better for write-heavy ones but you always want 
 the same information - ancestors, children, descendants, siblings, etc. Your application code shouldn't have to change 
 just because you realized that you're better off storing records as a set instead of a tree.
+
+
+Requires ActiveRecord >= 2.1
 
 
 == Installation
@@ -31,6 +34,7 @@ Simply call <tt>nestable</tt> in your model and pass the <tt>:theory</tt> that y
 Take a look at the documentation at http://rdoc.info/projects/shuber/nestable for more information about each theory
 
 * :tree (Nestable::Tree) <b>default</b>
+* :path (Nestable::Path)
 
 
 == Contact

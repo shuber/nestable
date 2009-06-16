@@ -109,6 +109,18 @@ class TreeTest < Test::Unit::TestCase
     assert_equal @child.id, @sub_child.parent_column_value
   end
   
+  def test_parent_column_value_changed?
+    assert !@root.parent_column_value_changed?
+    @root.parent_id = 99
+    assert @root.parent_column_value_changed?
+  end
+  
+  def test_parent_column_value_was
+    old_value = @child.parent_id
+    @child.parent_id = 99
+    assert_equal old_value, @child.parent_column_value_was
+  end
+  
   def test_root
     assert_equal @root, @root.root
     assert_equal @root, @child.root

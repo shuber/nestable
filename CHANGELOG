@@ -5,6 +5,7 @@
   * Tree uses anonymous scopes whenever possible
   * Optimize Tree validations
   * Remove Set for now
+  * Update Path logic and tests
 
 2009-06-14 - Sean Huber (shuber@huberry.com)
   * Update Nestable interface logic
