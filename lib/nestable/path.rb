@@ -75,12 +75,10 @@ module Nestable
     end
     
     def self_and_descendants # :nodoc:
-      nestable_path = path_column_value_changed? ? path_column_value_was : path_column_value
-      nestable_segment = segment_column_value_changed? ? segment_column_value_was : segment_column_value
       nestable_scope.scoped(
         :conditions => [
           "#{self.class.table_name}.#{self.class.nestable_options[:path_column]} LIKE ? OR #{self.class.table_name}.#{self.class.primary_key} = ?", 
-          "#{nestable_path}#{nestable_segment}#{self.class.nestable_options[:segment_delimiter]}%", 
+          "#{path_column_value}#{segment_column_value}#{self.class.nestable_options[:segment_delimiter]}%", 
           id
         ]
       )
