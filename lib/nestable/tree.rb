@@ -11,12 +11,16 @@ module Nestable
   #
   #   :class_name       -  The class name to use for the parent and children associations. Defaults to the name of the current class.
   #   :dependent        -  The dependent option for the children association. Defaults to :destroy.
+  #   :level_column     -  The name of the column that stores the number of ancestors a node has. This column is optional. If you
+  #                        decide not to store this field, the level of a node is calculated by recursively fetching its parents 
+  #                        and counting them. Defaults to nil.
   #   :order            -  The default order to use when collecting children, descendants, siblings, etc. Defaults to nil.
   #   :parent_column *  -  The name of the foreign key that references the parent of a node. Defaults to :parent_id.
   #   :scope            -  A field or an array of fields to scope trees to. Defaults to an empty array.
   #
-  #   * Required field which must exist in your database
+  #   * Signifies a required field which must exist in your database
   #
+  #     :level_column   -  integer (if you decide to store it)
   #     :parent_column  -  integer
   module Tree
     
@@ -26,6 +30,8 @@ module Nestable
         has_many :children, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:parent_column], :dependent => nestable_options[:dependent], :order => nestable_options[:order]
         validate :ensure_parent_exists_in_nestable_scope
         validate_on_update :ensure_parent_column_does_not_reference_self_and_descendants
+        
+        before_save :set_level_column_value
         
         named_scope :roots, :conditions => { nestable_options[:parent_column] => nil }
       end if base.ancestors.include?(ActiveRecord::Base)
@@ -90,7 +96,12 @@ module Nestable
     end
     
     def level # :nodoc:
-      ancestors.size
+      level_column_value
+    end
+    
+    # Returns the value of a node's <tt>:level_column</tt> or calculates it if it's not stored
+    def level_column_value
+      self.class.nestable_options[:level_column].nil? ? ancestors.size : self[self.class.nestable_options[:level_column]]
     end
     
     # Returns an anonymous scope of <tt>:conditions</tt> and <tt>:order</tt> referencing the same <tt>:scope</tt> as the current node
@@ -194,6 +205,12 @@ module Nestable
       def ensure_parent_column_does_not_reference_self_and_descendants # :nodoc:
         if parent_column_value_changed? &&  self_and_descendant_ids.include?(parent_column_value)
           errors.add(self.class.nestable_options[:parent_column], "can't be a reference to the current node or any of its descendants")
+        end
+      end
+      
+      def set_level_column_value        
+        unless self.class.nestable_options[:level_column].nil? || (!parent_column_value_changed? && !new_record?)
+          send("#{self.class.nestable_options[:level_column]}=".to_sym, parent.nil? ? 0 : parent.level + 1)
         end
       end
     

@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class Category < ActiveRecord::Base
-  nestable :scope => :site_id
+  nestable :scope => :site_id, :level_column => :level
 end
 
 class TreeTest < Test::Unit::TestCase

@@ -20,7 +20,7 @@ module Nestable
   #   :segment_column *   -  The name of the database column to use when calculating the path of a node. Defaults to :id.
   #   :segment_delimiter  -  The delimiter to use when separating segments and storing paths. Defaults to '/'
   #
-  #   * Required field which must exist in your database
+  #   * Signifies a required field which must exist in your database
   #
   #     :level_column     -  integer
   #     :parent_column    -  integer
@@ -67,16 +67,6 @@ module Nestable
       descendants.scoped(
         :conditions => "NOT EXISTS (SELECT * FROM #{self.class.table_name} #{self.class.table_name}_children WHERE #{self.class.nestable_options[:parent_column]} = #{self.class.table_name}.#{self.class.primary_key})"
       )
-    end
-    
-    def level # :nodoc:
-      level_column_value
-    end
-    
-    # Returns the value of a node's <tt>:level_column</tt>
-    def level_column_value
-      level_column = self.class.nestable_options[:level_column]
-      level_column.to_s == 'level' ? self[level_column] : send(level_column)
     end
     
     # Returns the value of a node's <tt>:path_column</tt>
@@ -126,7 +116,6 @@ module Nestable
             nestable_path << self.class.nestable_options[:segment_delimiter]
           end
           send("#{self.class.nestable_options[:path_column]}=".to_sym, nestable_path)
-          send("#{self.class.nestable_options[:level_column]}=".to_sym, nestable_path.scan(self.class.nestable_options[:segment_delimiter]).size)
         end
       end
       

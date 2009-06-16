@@ -31,12 +31,6 @@ class PathTest < Test::Unit::TestCase
     assert_equal [], @child_2.leaves
   end
   
-  def test_level
-    assert_equal 0, @root.level
-    assert_equal 1, @child.level
-    assert_equal 2, @sub_child.level
-  end
-  
   def test_path_column_value
     assert_equal @root.path, @root.path_column_value
     assert_equal @child.path, @child.path_column_value

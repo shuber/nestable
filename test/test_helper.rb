@@ -16,6 +16,7 @@ def setup_tables
       create_table :categories do |t|
         t.integer  :site_id
         t.integer  :parent_id
+        t.integer  :level # optional
       end
       
       create_table :nests do |t|
