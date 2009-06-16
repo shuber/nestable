@@ -14,13 +14,13 @@ module Nestable
   #   :dependent          -  The dependent option for the children association. Defaults to :destroy.
   #   :level_column *     -  The name of the column that stores the number of ancestors a node has. Defaults to :level.
   #   :order              -  The default order to use when collecting children, descendants, siblings, etc. Defaults to nil.
-  #   :parent_column *    -  The name of the foreign key that references a node's parent. Defaults to :parent_id.
-  #   :path_column *      -  The name of the column that references a node's ancestry path. Defaults to :path.
+  #   :parent_column *    -  The name of the foreign key that references the parent of a node. Defaults to :parent_id.
+  #   :path_column *      -  The name of the column that references the ancestry path of a node. Defaults to :path.
   #   :scope              -  A field or an array of fields to scope trees to. Defaults to an empty array.
-  #   :segment_column *   -  The name of the database column to use when calculating a node's path. Defaults to :id.
+  #   :segment_column *   -  The name of the database column to use when calculating the path of a node. Defaults to :id.
   #   :segment_delimiter  -  The delimiter to use when separating segments and storing paths. Defaults to '/'
   #
-  #   * <em>Required field which must exist in your database</em>
+  #   * Required field which must exist in your database
   #
   #     :level_column     -  integer
   #     :parent_column    -  integer
