@@ -1,6 +1,6 @@
 require 'test/unit'
 require 'rubygems'
-gem 'activerecord', '>= 2.0.0'
+gem 'activerecord', '>= 2.1.0'
 require 'active_record'
 
 require File.dirname(__FILE__) + '/../lib/nestable'

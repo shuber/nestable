@@ -4,6 +4,7 @@
   * Fix descendants sorting for Path
   * Refactor Path
   * Update documentation
+  * Require ActiveRecord greater than or equal to 2.1
 
 2009-06-15 - Sean Huber (shuber@huberry.com)
   * Tree accepts an array of order options
