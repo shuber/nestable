@@ -6,6 +6,7 @@
   * Optimize Tree validations
   * Remove Set for now
   * Update Path logic and tests
+  * Add roots named scope to Tree
 
 2009-06-14 - Sean Huber (shuber@huberry.com)
   * Update Nestable interface logic

@@ -22,6 +22,8 @@ module Nestable
         has_many :children, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:parent_column], :dependent => nestable_options[:dependent], :order => nestable_options[:order]
         validate :ensure_parent_exists_in_nestable_scope
         validate_on_update :ensure_parent_column_does_not_reference_self_and_descendants
+        
+        named_scope :roots, :conditions => { nestable_options[:parent_column] => nil }
       end if base.ancestors.include?(ActiveRecord::Base)
     end
     
@@ -134,7 +136,7 @@ module Nestable
     end
     
     def roots # :nodoc:
-      nestable_scope.scoped(:conditions => { self.class.nestable_options[:parent_column] => nil })
+      nestable_scope.roots
     end
     
     def self_and_ancestor_ids # :nodoc:

@@ -18,6 +18,11 @@ def setup_tables
         t.integer  :parent_id
       end
       
+      create_table :nests do |t|
+        t.integer  :site_id
+        t.integer  :parent_id
+      end
+      
       create_table :pages do |t|
         t.integer  :site_id
         t.integer  :parent_id

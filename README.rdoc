@@ -9,7 +9,6 @@ Some theories are better for read-heavy applications and others are better for w
 the same information - ancestors, children, descendants, siblings, etc. Your application code shouldn't have to change 
 just because you realized that you're better off storing records as a set instead of a tree.
 
-
 Requires ActiveRecord >= 2.1
 
 

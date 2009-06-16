@@ -1,5 +1,8 @@
 require 'test_helper'
 
+class Nest < ActiveRecord::Base
+end
+
 module Nestable
   module TheoryWithValidation
     def self.process_options!(options)
@@ -24,37 +27,37 @@ class NestableTest < Test::Unit::TestCase
   end
   
   def test_should_add_a_nestable_method_to_active_record
-    assert ActiveRecord::Base.respond_to?(:nestable)
+    assert Nest.respond_to?(:nestable)
   end
   
   def test_should_not_raise_a_name_error_if_theory_exists
-    ActiveRecord::Base.nestable
+    Nest.nestable
   end
   
   def test_should_raise_a_name_error_if_theory_does_not_exist
-    assert_raises(NameError) { ActiveRecord::Base.nestable :theory => 'invalid' }
+    assert_raises(NameError) { Nest.nestable :theory => 'invalid' }
   end
   
   def test_should_add_a_cattr_accessor_for_nestable_options
-    assert !ActiveRecord::Base.respond_to?(:nestable_options)
-    ActiveRecord::Base.nestable
-    assert ActiveRecord::Base.respond_to?(:nestable_options)
+    assert !Nest.respond_to?(:nestable_options)
+    Nest.nestable
+    assert Nest.respond_to?(:nestable_options)
   end
   
   def test_should_include_theory
-    assert !ActiveRecord::Base.include?(Nestable::TheoryWithValidation)
-    ActiveRecord::Base.nestable :theory => 'theory_with_validation'
-    assert ActiveRecord::Base.include?(Nestable::TheoryWithValidation)
+    assert !Nest.include?(Nestable::TheoryWithValidation)
+    Nest.nestable :theory => 'theory_with_validation'
+    assert Nest.include?(Nestable::TheoryWithValidation)
   end
   
   def test_should_add_the_class_to_nestable_options
-    ActiveRecord::Base.nestable
-    assert_equal ActiveRecord::Base, ActiveRecord::Base.nestable_options[:class]
+    Nest.nestable
+    assert_equal Nest, Nest.nestable_options[:class]
   end
   
   def test_should_raise_not_implemented_error_if_theory_is_missing_nestable_interface_methods
     assert_raises NotImplementedError do
-      ActiveRecord::Base.nestable :theory => :theory_without_method
+      Nest.nestable :theory => :theory_without_method
     end
   end
   
