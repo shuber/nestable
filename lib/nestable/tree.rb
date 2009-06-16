@@ -29,7 +29,7 @@ module Nestable
     def self.process_options!(options) # :nodoc:
       options = { :dependent => :destroy, :parent_column => :parent_id, :scope => [] }.merge(options)
       options[:class_name] ||= options[:class].name
-      options[:order] = Array(options[:order]).map { |order| order.is_a?(Symbol) ? "#{self.class.table_name}.#{order}" : order }.join(', ') unless options[:order].nil?
+      options[:order] = Array(options[:order]).map { |order| order.is_a?(Symbol) ? "#{options[:class].table_name}.#{order}" : order }.join(', ') unless options[:order].nil?
       options[:scope] = Array(options[:scope])
       options
     end
@@ -45,6 +45,7 @@ module Nestable
     end
     
     def children # :nodoc:
+      nestable_scope.scoped(:conditions => { self.class.nestable_options[:parent_column] => id })
     end
     
     def children_ids # :nodoc:
@@ -115,6 +116,16 @@ module Nestable
       send(self.class.nestable_options[:parent_column])
     end
     
+    # Returns true if a node's <tt>:parent_column</tt> value was changed, false otherwise
+    def parent_column_value_changed?
+      send("#{self.class.nestable_options[:parent_column]}_changed?")
+    end
+    
+    # Returns the old value of a node's <tt>:parent_column</tt> if it was was changed
+    def parent_column_value_was
+      send("#{self.class.nestable_options[:parent_column]}_was")
+    end
+    
     def root # :nodoc:
       is_root? ? self : ancestors.last
     end
@@ -170,11 +181,15 @@ module Nestable
     protected
     
       def ensure_parent_exists_in_nestable_scope # :nodoc:
-        self.errors.add(self.class.nestable_options[:parent_column], 'does not exist') unless parent_column_value.nil? || nestable_scope.scoped(:conditions => { :id => parent_column_value }).first
+        unless !parent_column_value_changed? || parent_column_value.nil? || nestable_scope.scoped(:conditions => { :id => parent_column_value }).first
+          self.errors.add(self.class.nestable_options[:parent_column], 'does not exist')
+        end
       end
       
       def ensure_parent_column_does_not_reference_self_and_descendants # :nodoc:
-        self.errors.add(self.class.nestable_options[:parent_column], "can't be a reference to the current node or any of its descendants") if self_and_descendant_ids.include?(parent_column_value)
+        if parent_column_value_changed? &&  self_and_descendant_ids.include?(parent_column_value)
+          self.errors.add(self.class.nestable_options[:parent_column], "can't be a reference to the current node or any of its descendants")
+        end
       end
     
   end
