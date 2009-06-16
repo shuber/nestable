@@ -6,7 +6,7 @@ module Nestable
   #
   # Cons:
   #
-  # * Slow updates - the <tt>:path_column</tt> must be re-calculated and saved one by one for every descendant node (if it was changed)
+  # * Slow updates - the <tt>:path_column</tt> must be re-calculated once for every level of a node's descendants (if it was changed)
   #
   # Options:
   #
@@ -116,7 +116,10 @@ module Nestable
       
       def update_child_path_column_values # :nodoc:
         # TODO: figure out a compatible way to UPDATE with ORDER in sql for all adapters so that we can do this in one query
-        children.each(&:save) if path_column_value_updated?
+        if path_column_value_updated?
+          children.update_all ["#{self.class.nestable_options[:path_column]} = ?", path_column_value + self.class.nestable_options[:segment_delimiter] + segment_column_value.to_s]
+          children.each(&:update_child_path_column_values)
+        end
       end
       
   end
