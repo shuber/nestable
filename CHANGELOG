@@ -7,6 +7,7 @@
   * Remove Set for now
   * Update Path logic and tests
   * Add roots named scope to Tree
+  * Always add :class to nestable_options
 
 2009-06-14 - Sean Huber (shuber@huberry.com)
   * Update Nestable interface logic
