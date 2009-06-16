@@ -29,13 +29,24 @@ module Nestable
         before_save :set_path_column_value
         after_update :update_child_path_column_values
         alias_method_chain :reload, :nestable_path
+        
+        # define_method 'path=' do |value|
+        #   @path_column_value_updated = true if value != path_column_value
+        #   super value
+        # end
+        [:path, :segment].each do |column|
+          define_method "#{base.nestable_options["#{column}_column".to_sym]}=" do |value|
+            instance_variable_set("@#{column}_column_value_updated", true) if value != send("#{column}_column_value".to_sym)
+            super value
+          end
+        end
       end
     end
     
     def self.process_options!(options) # :nodoc:
       options = { :level_column => :level, :path_column => :path, :segment_column => :id, :segment_delimiter => '/' }.merge(options)
       table_name = options[:class].table_name
-      options[:order] = ["#{table_name}.#{options[:path_column]} || #{table_name}.#{options[:segment_column]} || '#{options[:segment_delimiter]}' || (#{table_name}.#{options[:level_column]}/10000000000)", options[:order]].reject(&:blank?).join(', ')
+      options[:order] = ["#{table_name}.#{options[:path_column]} || #{table_name}.#{options[:segment_column]} || '#{options[:segment_delimiter]}' || (#{table_name}.#{options[:level_column]}/100000000000)", options[:order]].reject(&:blank?).join(', ')
       Nestable::Tree.process_options!(options)
     end
     
@@ -66,23 +77,14 @@ module Nestable
       send(self.class.nestable_options[:path_column])
     end
     
-    # Returns true if a node's <tt>:path_column</tt> value was changed, false otherwise
-    def path_column_value_changed?
-      send("#{self.class.nestable_options[:path_column]}_changed?")
-    end
-    
-    # Returns the same thing as <tt>path_column_value_changed?</tt> but its value is not cleared after saving
+    # Returns <tt>path_column_value_changed?</tt> but the value is not set back to false until the node is reloaded
     def path_column_value_updated?
-      @path_column_value_updated
-    end
-    
-    # Returns the old value of a node's <tt>:path_column</tt> if it was was changed
-    def path_column_value_was
-      send("#{self.class.nestable_options[:path_column]}_was")
+      !!@path_column_value_updated
     end
     
     def reload_with_nestable_path(*args) # :nodoc:
       @path_column_value_updated = nil
+      @segment_column_value_updated = nil
       reload_without_nestable_path(*args)
     end
     
@@ -101,34 +103,28 @@ module Nestable
       send(self.class.nestable_options[:segment_column])
     end
     
-    # Returns true if a node's <tt>:segment_column</tt> value was changed, false otherwise
-    def segment_column_value_changed?
-      send("#{self.class.nestable_options[:segment_column]}_changed?")
-    end
-    
-    # Returns the old value of a node's <tt>:segment_column</tt> if it was was changed
-    def segment_column_value_was
-      send("#{self.class.nestable_options[:segment_column]}_was")
+    # Returns <tt>segment_column_value_changed?</tt> but the value is not set back to false until the node is reloaded
+    def segment_column_value_updated?
+      !!@segment_column_value_updated
     end
     
     protected
       
       def set_path_column_value # :nodoc:
-        nestable_path = ''
-        unless parent.nil?
-          nestable_path << parent.path_column_value
-          nestable_path << parent.segment_column_value.to_s
-          nestable_path << self.class.nestable_options[:segment_delimiter]
-        end
-        if new_record? || nestable_path != path_column_value
-          @path_column_value_updated = true
+        if new_record? || parent_column_value_changed?
+          nestable_path = ''
+          unless parent.nil?
+            nestable_path << parent.path_column_value
+            nestable_path << parent.segment_column_value.to_s
+            nestable_path << self.class.nestable_options[:segment_delimiter]
+          end
           send("#{self.class.nestable_options[:path_column]}=".to_sym, nestable_path)
           send("#{self.class.nestable_options[:level_column]}=".to_sym, nestable_path.scan(self.class.nestable_options[:segment_delimiter]).size)
         end
       end
       
       def update_child_path_column_values # :nodoc:
-        if path_column_value_updated?
+        if path_column_value_updated? || segment_column_value_updated?
           children.update_all [
             "#{self.class.nestable_options[:path_column]} = ?, #{self.class.nestable_options[:level_column]} = ?",
             path_column_value + self.class.nestable_options[:segment_delimiter] + segment_column_value.to_s,

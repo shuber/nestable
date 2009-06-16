@@ -43,23 +43,10 @@ class PathTest < Test::Unit::TestCase
     assert_equal @sub_child.path, @sub_child.path_column_value
   end
   
-  def test_path_column_value_changed?
-    assert !@root.path_column_value_changed?
-    @root.path = 'testing'
-    assert @root.path_column_value_changed?
-  end
-  
   def test_path_column_value_updated?
     assert !@sub_child.path_column_value_updated?
-    @sub_child.parent_id = @child_2.id
-    assert @sub_child.save
+    @sub_child.path = 'testing'
     assert @sub_child.path_column_value_updated?
-  end
-  
-  def test_path_column_value_was
-    old_value = @child.path
-    @child.path = 'testing'
-    assert_equal old_value, @child.path_column_value_was
   end
   
   def test_reload_with_nestable_path
@@ -82,16 +69,10 @@ class PathTest < Test::Unit::TestCase
     assert_equal @sub_child.id, @sub_child.segment_column_value
   end
   
-  def test_segment_column_value_changed?
-    assert !@root.segment_column_value_changed?
-    @root.id = 99
-    assert @root.segment_column_value_changed?
-  end
-  
-  def test_segment_column_value_was
-    old_value = @child.id
-    @child.id = 99
-    assert_equal old_value, @child.segment_column_value_was
+  def test_segment_column_value_updated?
+    assert !@sub_child.segment_column_value_updated?
+    @sub_child.id = 99
+    assert @sub_child.segment_column_value_updated?
   end
   
   def test_set_path_column_value
