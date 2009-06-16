@@ -6,6 +6,7 @@
   * Update documentation
   * Require ActiveRecord greater than or equal to 2.1
   * Add functionality to optionally to store a node's :level_column to Tree theory
+  * Typo
 
 2009-06-15 - Sean Huber (shuber@huberry.com)
   * Tree accepts an array of order options

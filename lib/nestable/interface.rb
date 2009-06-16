@@ -1,6 +1,6 @@
 module Nestable
   # The standard interface for all nestable theories. Every nestable ActiveRecord 
-  # instance will respond to these methods reguardless of which theory was used.
+  # instance will respond to these methods regardless of which theory was used.
   module Interface
     
     # Returns an array containing the ids of a node's ancestors
