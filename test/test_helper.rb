@@ -27,6 +27,7 @@ def setup_tables
         t.integer  :site_id
         t.integer  :parent_id
         t.string   :path
+        t.integer  :level
       end
     end
   end

@@ -12,6 +12,7 @@ module Nestable
   #
   #   :class_name         -  The class name to use for the parent and children associations. Defaults to the name of the current class.
   #   :dependent          -  The dependent option for the children association. Defaults to :destroy.
+  #   :level              -  The name of the column that stores the number of ancestors a node has. Defaults to :level.
   #   :order              -  The default order to use when collecting children, descendants, siblings, etc. Defaults to nil.
   #   :parent_column      -  The name of the foreign key that references a node's parent. Defaults to :parent_id.
   #   :path_column        -  The name of the column that references a node's ancestry path. Defaults to :path.
@@ -32,8 +33,9 @@ module Nestable
     end
     
     def self.process_options!(options) # :nodoc:
-      options = { :path_column => :path, :segment_column => :id, :segment_delimiter => '/' }.merge(options)
-      options[:order] ||= [options[:path_column], options[:segment_column]]
+      options = { :level_column => :level, :path_column => :path, :segment_column => :id, :segment_delimiter => '/' }.merge(options)
+      table_name = options[:class].table_name
+      options[:order] = ["#{table_name}.#{options[:path_column]} || #{table_name}.#{options[:segment_column]} || '#{options[:segment_delimiter]}' || (#{table_name}.#{options[:level_column]}/10000000000)", options[:order]].reject(&:blank?).join(', ')
       Nestable::Tree.process_options!(options)
     end
     
@@ -47,6 +49,16 @@ module Nestable
       descendants.scoped(
         :conditions => "NOT EXISTS (SELECT * FROM #{self.class.table_name} #{self.class.table_name}_children WHERE #{self.class.nestable_options[:parent_column]} = #{self.class.table_name}.#{self.class.primary_key})"
       )
+    end
+    
+    def level # :nodoc:
+      level_column_value
+    end
+    
+    # Returns the value of a node's <tt>:level_column</tt>
+    def level_column_value
+      level_column = self.class.nestable_options[:level_column]
+      level_column.to_s == 'level' ? self[level_column] : send(level_column)
     end
     
     # Returns the value of a node's <tt>:path_column</tt>
@@ -108,14 +120,20 @@ module Nestable
           nestable_path << parent.segment_column_value.to_s
           nestable_path << self.class.nestable_options[:segment_delimiter]
         end
-        @path_column_value_updated = (nestable_path != path_column_value && !new_record?)
-        send("#{self.class.nestable_options[:path_column]}=".to_sym, nestable_path)
+        if new_record? || nestable_path != path_column_value
+          @path_column_value_updated = true
+          send("#{self.class.nestable_options[:path_column]}=".to_sym, nestable_path)
+          send("#{self.class.nestable_options[:level_column]}=".to_sym, nestable_path.scan(self.class.nestable_options[:segment_delimiter]).size)
+        end
       end
       
       def update_child_path_column_values # :nodoc:
-        # TODO: figure out a compatible way to UPDATE with ORDER in sql for all adapters so that we can do this in one query
         if path_column_value_updated?
-          children.update_all ["#{self.class.nestable_options[:path_column]} = ?", path_column_value + self.class.nestable_options[:segment_delimiter] + segment_column_value.to_s]
+          children.update_all [
+            "#{self.class.nestable_options[:path_column]} = ?, #{self.class.nestable_options[:level_column]} = ?",
+            path_column_value + self.class.nestable_options[:segment_delimiter] + segment_column_value.to_s,
+            level_column_value + 1
+          ]
           children.each(&:update_child_path_column_values)
         end
       end

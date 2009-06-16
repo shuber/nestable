@@ -18,17 +18,23 @@ class PathTest < Test::Unit::TestCase
   end
   
   def test_descendants
-    assert_equal [@child, @child_2, @sub_child], @root.descendants
+    assert_equal [@child, @sub_child, @child_2], @root.descendants
     assert_equal [@child_3], @root_2.descendants
     assert_equal [@sub_child], @child.descendants
     assert_equal [], @child_2.descendants
   end
   
   def test_leaves
-    assert_equal [@child_2, @sub_child], @root.leaves
+    assert_equal [@sub_child, @child_2], @root.leaves
     assert_equal [@child_3], @root_2.leaves
     assert_equal [@sub_child], @child.leaves
     assert_equal [], @child_2.leaves
+  end
+  
+  def test_level
+    assert_equal 0, @root.level
+    assert_equal 1, @child.level
+    assert_equal 2, @sub_child.level
   end
   
   def test_path_column_value
@@ -65,7 +71,7 @@ class PathTest < Test::Unit::TestCase
   end
   
   def test_self_and_descendants
-    assert_equal [@root, @child, @child_2, @sub_child], @root.self_and_descendants
+    assert_equal [@root, @child, @sub_child, @child_2], @root.self_and_descendants
     assert_equal [@root_2, @child_3], @root_2.self_and_descendants
     assert_equal [@child_2], @child_2.self_and_descendants
   end
