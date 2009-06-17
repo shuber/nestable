@@ -25,7 +25,6 @@ module Nestable
   # Options:
   #
   #   :class_name         -  The class name to use for the parent and children associations. Defaults to the name of the current class.
-  #   :dependent          -  The dependent option for the children association. Defaults to :destroy.
   #   :level_column *     -  The name of the column that stores the number of ancestors a node has. Defaults to :level.
   #   :order              -  The default order to use when collecting children, descendants, siblings, etc. Defaults to nil.
   #   :parent_column *    -  The name of the foreign key that references the parent of a node. Defaults to :parent_id.

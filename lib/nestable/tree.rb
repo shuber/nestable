@@ -24,7 +24,6 @@ module Nestable
   # Options:
   #
   #   :class_name       -  The class name to use for the parent and children associations. Defaults to the name of the current class.
-  #   :dependent        -  The dependent option for the children association. Defaults to :destroy.
   #   :level_column     -  The name of the column that stores the number of ancestors a node has. This column is optional. If you
   #                        decide not to store this field, the level of a node is calculated by recursively fetching its parents 
   #                        and counting them. Defaults to nil.
@@ -41,7 +40,7 @@ module Nestable
     def self.included(base) # :nodoc:
       base.class_eval do
         belongs_to :parent, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:parent_column]
-        has_many :children, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:parent_column], :dependent => nestable_options[:dependent], :order => nestable_options[:order]
+        has_many :children, :class_name => nestable_options[:class_name], :foreign_key => nestable_options[:parent_column], :dependent => :destroy, :order => nestable_options[:order]
         validate :ensure_parent_exists_in_nestable_scope
         validate_on_update :ensure_parent_column_does_not_reference_self_and_descendants
         
@@ -222,7 +221,7 @@ module Nestable
         end
       end
       
-      def set_level_column_value        
+      def set_level_column_value # :nodoc:
         unless self.class.nestable_options[:level_column].nil? || (!parent_column_value_changed? && !new_record?)
           send("#{self.class.nestable_options[:level_column]}=".to_sym, parent.nil? ? 0 : parent.level + 1)
         end
