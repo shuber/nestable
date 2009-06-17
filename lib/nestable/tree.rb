@@ -1,4 +1,18 @@
 module Nestable
+  # Example table:
+  #
+  #   +------+---------+-------------+
+  #   |  id  |  name   |  parent_id  |
+  #   +------+---------+-------------+
+  #   |  1   |  food   |     NULL    |
+  #   |  2   |  fruit  |      1      |
+  #   |  3   |  sour   |      2      |
+  #   |  4   |  sweet  |      2      |
+  #   |  5   |  meat   |      1      |
+  #   |  6   |  beef   |      5      |
+  #   |  7   |  pork   |      5      |
+  #   +------+---------+-------------+
+  #
   # Pros: 
   #
   # * Quick inserts and updates - it only needs to set a foreign key on the current node which references its parent node

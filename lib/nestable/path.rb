@@ -1,4 +1,18 @@
 module Nestable
+  # Example table:
+  #
+  #   +------+---------+-------------+--------+---------+
+  #   |  id  |  name   |  parent_id  |  path  |  level  |
+  #   +------+---------+-------------+--------+---------+
+  #   |  1   |  food   |     NULL    |        |    0    |
+  #   |  2   |  fruit  |      1      |  1/    |    1    |
+  #   |  3   |  sour   |      2      |  1/2/  |    2    |
+  #   |  4   |  sweet  |      2      |  1/2/  |    2    |
+  #   |  5   |  meat   |      1      |  1/    |    1    |
+  #   |  6   |  beef   |      5      |  1/5/  |    2    |
+  #   |  7   |  pork   |      5      |  1/5/  |    2    |
+  #   +------+---------+-------------+--------+---------+
+  #
   # Pros:
   #
   # * Quick inserts - it only needs to calculate the <tt>:path_column</tt> on the current node by looking up its parent's <tt>:path_column</tt> and <tt>:segment_column</tt>
