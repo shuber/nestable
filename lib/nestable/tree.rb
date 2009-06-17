@@ -46,6 +46,7 @@ module Nestable
         
         before_save :set_level_column_value
         
+        named_scope :leaves, :conditions => "NOT EXISTS (SELECT * FROM #{table_name} #{table_name}_children WHERE #{nestable_options[:parent_column]} = #{table_name}.#{primary_key})"
         named_scope :roots, :conditions => { nestable_options[:parent_column] => nil }
       end if base.ancestors.include?(ActiveRecord::Base)
     end

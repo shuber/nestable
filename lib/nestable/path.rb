@@ -77,9 +77,7 @@ module Nestable
     end
     
     def leaves # :nodoc:
-      descendants.scoped(
-        :conditions => "NOT EXISTS (SELECT * FROM #{self.class.table_name} #{self.class.table_name}_children WHERE #{self.class.nestable_options[:parent_column]} = #{self.class.table_name}.#{self.class.primary_key})"
-      )
+      descendants.leaves
     end
     
     # Returns the value of a node's <tt>:path_column</tt>
