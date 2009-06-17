@@ -66,7 +66,7 @@ module Nestable
     def self.process_options!(options) # :nodoc:
       options = { :level_column => :level, :path_column => :path, :segment_column => :id, :segment_delimiter => '/' }.merge(options)
       table_name = options[:class].table_name
-      options[:order] = ["#{table_name}.#{options[:path_column]} || #{table_name}.#{options[:segment_column]} || '#{options[:segment_delimiter]}' || (#{table_name}.#{options[:level_column]}/100000000000)", options[:order]].reject(&:blank?).join(', ')
+      options[:order] = ["#{table_name}.#{options[:path_column]} || #{table_name}.#{options[:segment_column]} || '#{options[:segment_delimiter]}' || (#{table_name}.#{options[:level_column]}/100000000000)", Array(options[:order])].flatten.compact.join(', ')
       Nestable::Tree.process_options!(options)
     end
     

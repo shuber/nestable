@@ -10,6 +10,7 @@
   * Add example tables to documentation
   * Force :dependent => :destroy on Tree's children association
   * Add Tree#flatten!
+  * Refactor Path order option merging
 
 2009-06-15 - Sean Huber (shuber@huberry.com)
   * Tree accepts an array of order options
