@@ -27,6 +27,10 @@ module Nestable
     def descendants
     end
     
+    # Moves all of a nodes descendants under its parent making them siblings
+    def flatten!
+    end
+    
     # Returns true if a node is an ancestor of the specified node, false otherwise
     def is_ancestor_of?(node)
     end

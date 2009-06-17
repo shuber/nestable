@@ -84,6 +84,10 @@ module Nestable
       children.inject([]) { |descendants, node| descendants += [node] + node.descendants }.flatten
     end
     
+    def flatten! # :nodoc:
+      descendants.each { |descendant| descendant.update_attribute(self.class.nestable_options[:parent_column], parent_column_value) }
+    end
+    
     def is_ancestor_of?(node) # :nodoc:
       node.ancestors.include?(self)
     end

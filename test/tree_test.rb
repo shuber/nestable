@@ -53,6 +53,11 @@ class TreeTest < Test::Unit::TestCase
     assert_equal [], @child_2.descendant_ids
   end
   
+  def test_flatten!
+    @root.flatten!
+    assert_equal [@root_2, @child, @child_2, @sub_child], @root.siblings
+  end
+  
   def test_is_ancestor_of?
     assert @root.is_ancestor_of?(@child)
     assert @root.is_ancestor_of?(@sub_child)
