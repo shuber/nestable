@@ -12,6 +12,7 @@
   * Add Tree#flatten!
   * Refactor Path order option merging
   * Add leaves named scope to Tree
+  * Add order to named scopes
 
 2009-06-15 - Sean Huber (shuber@huberry.com)
   * Tree accepts an array of order options
