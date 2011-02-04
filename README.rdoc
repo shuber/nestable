@@ -30,7 +30,7 @@ Simply call <tt>nestable</tt> in your model and pass the <tt>:strategy</tt> that
 
 == Strategies
 
-Take a look at the documentation at http://rdoc.info/projects/shuber/nestable for more information about each strategy
+Take a look at the documentation at http://rdoc.info/github/shuber/nestable/master/frames for more information about each strategy
 
 * :tree (Nestable::Strategy::Tree) <b>default</b>
 * :path (Nestable::Strategy::Path)
