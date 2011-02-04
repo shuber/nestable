@@ -7,7 +7,6 @@ $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $:.unshift(File.dirname(__FILE__))
 require 'nestable'
 
-# ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database => ':memory:'
 
 def setup_tables
