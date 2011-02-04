@@ -1,27 +1,40 @@
+require 'nestable/interface'
+
+# Adds nesting functionality to ActiveRecord objects with various strategies like: tree, set, path, etc.
 module Nestable
-  
-  # Adds nesting support to the current class.
+  module Strategy # :nodoc:
+    autoload :Path, 'nestable/strategy/path'
+    autoload :Tree, 'nestable/strategy/tree'
+  end
+
+  def self.extended(base) # :nodoc:
+    base.class_eval do
+      cattr_accessor :nestable_options
+      self.nestable_options = { :strategy => :tree }
+    end
+  end
+
+  # Adds nesting functionality to the current class.
   #
-  # Accepts an optional argument <tt>:theory</tt> along with any other options related with that theory.
-  # Take a look at a theory's documentation for a list of its related options.
+  # Accepts an optional argument <tt>:strategy</tt> along with any other options related with that strategy.
+  # Take a look at each strategy's documentation for a list of its related options.
   #
   # Example:
   #
   #   class Category < ActiveRecord::Base
-  #     nestable :theory => :set, :scope => :site_id
+  #     nestable :strategy => :path, :scope => :store_id
   #   end
   #
-  # The default <tt>:theory</tt> is <tt>:tree</tt>
+  # The default <tt>:strategy</tt> is <tt>:tree</tt>
   def nestable(options = {})
-    options = { :class => self }.merge(options)
-    theory = "Nestable::#{(options[:theory] ||= :tree).to_s.classify}".constantize
-    missing_methods = Nestable::Interface.instance_methods.reject { |method| theory.method_defined?(method) }
-    raise NotImplementedError.new("#{theory} must implement the following Nestable methods: #{missing_methods.sort.to_sentence}") unless missing_methods.empty?
-    cattr_accessor :nestable_options
-    self.nestable_options = theory.respond_to?(:process_options!) ? theory.process_options!(options) : options
-    include theory
+    nestable_options.merge!(options)
+    nestable_options[:strategy] = case nestable_options[:strategy]
+      when String then nestable_options[:strategy].constantize
+      when Symbol then Strategy.const_get(nestable_options[:strategy].to_s.classify)
+      else nestable_options[:strategy]
+    end
+    include nestable_options[:strategy], Interface
   end
-  
 end
 
 ActiveRecord::Base.extend Nestable

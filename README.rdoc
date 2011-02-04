@@ -1,39 +1,51 @@
 = nestable
 
-Allows you to nest ActiveRecord records with various theories like tree, set, path, etc.
+Allows you to nest ActiveRecord records with various strategies like tree, set, path, etc.
 
 What makes it different than other nesting gems/plugins?
 
-It aims to provide a standard interface to all nesting related methods no matter what theory you decide to use. 
-Some theories are better for read-heavy applications and others are better for write-heavy ones but you always want 
+It aims to provide a standard interface to all nesting related methods no matter what strategy you decide to use. 
+Some strategies are better for read-heavy applications and others are better for write-heavy ones - but you always want 
 the same information - ancestors, children, descendants, siblings, etc. Your application code shouldn't have to change 
 just because you realized that you're better off storing records as a set instead of a tree.
 
-Requires ActiveRecord >= 2.1
+== Requirements
+
+ActiveRecord >= 3.0.0
 
 
 == Installation
 
-  gem install shuber-nestable --source http://gems.github.com
-  OR
-  script/plugin install git://github.com/shuber/nestable.git
+  gem install nestable
 
 
 == Usage
 
-Simply call <tt>nestable</tt> in your model and pass the <tt>:theory</tt> that you want to use along with any options related to it (see Theories below).
+Simply call <tt>nestable</tt> in your model and pass the <tt>:strategy</tt> that you want to use along with any options related to it (see Strategies below).
 
-  class Category < ActiveRecord::Base
-    nestable :theory => :tree, :scope => :site_id
+  class Comment < ActiveRecord::Base
+    nestable :strategy => :path, :scope => :post_id
   end
 
 
-== Theories
+== Strategies
 
-Take a look at the documentation at http://rdoc.info/projects/shuber/nestable for more information about each theory
+Take a look at the documentation at http://rdoc.info/projects/shuber/nestable for more information about each strategy
 
-* :tree (Nestable::Tree) <b>default</b>
-* :path (Nestable::Path)
+* :tree (Nestable::Strategy::Tree) <b>default</b>
+* :path (Nestable::Strategy::Path)
+
+
+== Note on Patches/Pull Requests
+
+* Fork the project.
+* Make your feature addition or bug fix.
+* Add tests for it. This is important so I don't break it in a
+  future version unintentionally.
+* Commit, do not mess with Rakefile, version, or history.
+  (if you want to have your own version, that is fine but
+   bump version in a commit by itself I can ignore when I pull)
+* Send me a pull request. Bonus points for topic branches.
 
 
 == Contact
