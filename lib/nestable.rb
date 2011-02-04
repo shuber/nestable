@@ -2,6 +2,8 @@ require 'nestable/interface'
 
 # Adds nesting functionality to ActiveRecord objects with various strategies like: tree, set, path, etc.
 module Nestable
+  VERSION = '0.0.0'
+
   module Strategy # :nodoc:
     autoload :Path, 'nestable/strategy/path'
     autoload :Tree, 'nestable/strategy/tree'
