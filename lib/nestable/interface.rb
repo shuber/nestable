@@ -1,4 +1,4 @@
-module Nestable # :nodoc:
+module Nestable
   # The standard interface for all nestable strategies. Every nestable ActiveRecord 
   # instance should respond to these methods regardless of which strategy was used.
   module Interface
@@ -112,12 +112,6 @@ module Nestable # :nodoc:
 
     # Returns an array containing records with the same parent as a node
     def siblings
-    end
-
-    instance_methods(false).each do |method|
-      define_method(method) do
-        raise NotImplementedError.new("Nestable strategy '#{self.class.nestable_options[:strategy]}' does not implement '#{method}'")
-      end
     end
   end
 end

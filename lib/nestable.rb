@@ -1,3 +1,5 @@
+require 'interface'
+
 # Adds nesting functionality to ActiveRecord objects with various strategies like: tree, set, path, etc.
 module Nestable
   autoload :Interface, 'nestable/interface'
@@ -30,7 +32,7 @@ module Nestable
       when Symbol then Strategy.const_get(nestable_options[:strategy].to_s.classify)
       else nestable_options[:strategy]
     end
-    include nestable_options[:strategy], Interface
+    implement Interface and include nestable_options[:strategy]
   end
 end
 

@@ -1,4 +1,4 @@
-module Nestable # :nodoc:
+module Nestable
   module Strategy # :nodoc:
     # Example table:
     #

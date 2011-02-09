@@ -12,9 +12,9 @@ class NestableTest < Test::Unit::TestCase
     setup_tables
   end
 
-  def test_should_include_interface
+  def test_should_implement_interface
     Nest.nestable
-    assert Nest.include?(Nestable::Interface)
+    assert Nest.interfaces.include?(Nestable::Interface)
   end
 
   def test_should_allow_constant_strategies
