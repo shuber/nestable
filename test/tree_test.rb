@@ -221,4 +221,8 @@ class TreeTest < Test::Unit::TestCase
     assert @root.errors[:parent_id]
   end
 
+  def test_should_implement_interfaces
+    assert_implements_interfaces @root
+  end
+
 end

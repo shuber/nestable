@@ -85,4 +85,8 @@ class PathTest < Test::Unit::TestCase
     assert_not_equal old_sub_child_path, @sub_child.path
   end
 
+  def test_should_implement_interfaces
+    assert_implements_interfaces @root
+  end
+
 end
