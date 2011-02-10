@@ -42,5 +42,5 @@ Gem::Specification.new do |s|
     test/tree_test.rb
   )
 
-  s.add_dependency('shuber-interface', ['>= 0.0.1'])
+  s.add_dependency('shuber-interface', ['>= 0.0.2'])
 end
