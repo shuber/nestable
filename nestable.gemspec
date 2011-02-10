@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
     lib/nestable/strategy/path.rb
     lib/nestable/strategy/tree.rb
     lib/nestable/version.rb
-    lib/shuber-interface.rb
     MIT-LICENSE
     Rakefile
     README.rdoc
